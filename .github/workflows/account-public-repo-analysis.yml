@@ -1,0 +1,25 @@
+name: Account Public Repo Analysis
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
+  push:
+    paths:
+      - 'Account_Public_Repo_Analyzer.py'
+      - '.github/workflows/account-public-repo-analysis.yml'
+permissions:
+  contents: read
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Scan all owned public repositories
+        run: python Account_Public_Repo_Analyzer.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: account-public-repo-registry
+          path: account_public_repo_registry.json
